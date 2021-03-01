@@ -2,32 +2,46 @@
 // VARIABLES
 /////////////////////////////////////////////
 
-// Focus starts from name Input
+
+// Focus starts from name Input. Name and Email input selectors.
 const nameInput = document.getElementById("name");
 nameInput.focus();
+const emailInput = document.getElementById("email");
 
 // Design and Color selector variables
 const selectDesign = document.getElementById("design");
 const selectColor = document.getElementById("color");
 
-// Variables for Activities fieldset and Total Cost element/counting
+// Variables/Selectors for Activities fieldset, Activities inputs
+// and Total Cost element/counting.
 const activitiesField = document.getElementById("activities");
+///////const activitiesInputs = document.querySelectorAll("#activities-box input");
 const totalCostElement = document.getElementById("activities-cost");
 let totalCost = 0;
 
-// Job Role and Other Job Role Input variables
+// Job Role and Other Job Role Input variables/selectors
 const selectJobRole = document.getElementById("title");
 const otherJobInput = document.getElementById("other-job-role");
 
-// Selectors for menu and default choice, credit card.
+// Selectors for payment method menu, input fields below menu and default 
+// choice, credit card.
 const paymentMethod = document.getElementById("payment");
 const creditCardDiv = document.getElementById("credit-card");
 const paymentOptions = paymentMethod.children;
+
+// Selectors for payment method input fields
+const cardNumber = document.getElementById("cc-num");
+const zipCode = document.getElementById("zip");
+const cvv = document.getElementById("cvv");
+
+// Form element
+const form = document.querySelector("form");
 
 
 /////////////////////////////////////////////
 // LISTENERS
 /////////////////////////////////////////////
+
 
 // Other Job Role Input visible only when chosen from Job Role
 otherJobInput.style.display = "none";
@@ -78,10 +92,19 @@ paymentMethod.addEventListener('change', function(e){
   paymentDivDisplayToggle(paymentOption);
 });
 
+// Listening submit button inside 'form' element
+form.addEventListener('submit', function(e){
+  validateName(nameInput.value,e);
+  validateEmail(emailInput.value,e);
+  validateActivities(e);
+  validateCreditCard(e);
+});
+
 
 /////////////////////////////////////////////
 // SUPPORT FUNCTIONS
 /////////////////////////////////////////////
+
 
 /**
  * Changes view of Payment Info area according to the selected METHOD.
@@ -101,3 +124,51 @@ function paymentDivDisplayToggle(paymentOption) {
   }
 }
 
+/**
+ * Validates the name input field, if valid, allows the submit continue 
+ * @param {string} nameInputValue 
+ * @param {event} e 
+ */
+function validateName(nameInputValue,e) {
+  const valid = /^[a-zA-Z]+ ?[a-zA-Z]*? ?[a-zA-Z]*?$/.test(nameInputValue);
+  if (!valid) {
+    e.preventDefault();
+  }
+}
+
+/**
+ * Validates the email input field, if valid, allows submit to continue
+ * @param {string} emailInputValue 
+ * @param {event} e 
+ */
+function validateEmail(emailInputValue,e) {
+  const valid = /^\S+@\S+\.[a-z0-9]+$/i.test(emailInputValue);
+  if (!valid) {
+    e.preventDefault();
+  }
+}
+
+/**
+ * Validates that the user has chosen atleast 1 activity.
+ * @param {event} e 
+ */
+function validateActivities(e) {
+  if (totalCost === 0) {
+    e.preventDefault();
+  }
+}
+
+function validateCreditCard(e) {
+  
+}
+
+// TESTER LISTENER
+// emailInput.addEventListener('keyup', function(e){
+//   const valid = validateEmail(e.target.value,e);
+//   console.log(e.target.value);
+//   if (valid) {
+//     console.log("valid");
+//   } else {
+//     console.log("not valid");
+//   }
+// })
