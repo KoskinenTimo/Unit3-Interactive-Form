@@ -74,6 +74,8 @@ emailInput.addEventListener('keyup', function(e){
 selectJobRole.addEventListener('change', function(e){
   if (e.target.value === 'other') {
     otherJobInput.style.display = "";
+  } else {
+    otherJobInput.style.display = "none";
   }
 });
 
@@ -81,6 +83,7 @@ selectJobRole.addEventListener('change', function(e){
 // Colors dedicated to specific Design visible when Design selected
 selectDesign.addEventListener('change', function(e){
   selectColor.disabled = false;
+  selectColor.options[0].selected = true;
   const designPick = e.target.value;
   Array.from(selectColor.children).forEach(option => {
     const colorTheme = option.getAttribute("data-theme");
@@ -331,8 +334,10 @@ function toggleDisableEnable(item,checked) {
     const elementTime = element.getAttribute("data-day-and-time");
     if (checked && elementTime === itemTime && item !== element) {
       element.disabled = true;
+      element.parentElement.classList.add("disabled")
     } else if (!checked && elementTime === itemTime && item !== element) {
       element.disabled = false;
+      element.parentElement.classList.remove("disabled")
     }
   });
 }
