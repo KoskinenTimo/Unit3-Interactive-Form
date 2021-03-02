@@ -139,13 +139,13 @@ cardNumber.addEventListener('keyup', function(e){
 });
 
 //_________________________________________________________________________________
-//
+// Listens to Zip Code Number input real-time
 zipCode.addEventListener('keyup', function(e){
   validateZipCode(e.target.value,e);
 });
 
 //_________________________________________________________________________________
-//
+// Listens to CVV Number input real-time
 cvv.addEventListener('keyup', function(e){
   validateCvv(e.target.value,e);
 });
