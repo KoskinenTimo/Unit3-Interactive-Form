@@ -33,6 +33,8 @@ const paymentOptions = paymentMethod.children;
 const cardNumber = document.getElementById("cc-num");
 const zipCode = document.getElementById("zip");
 const cvv = document.getElementById("cvv");
+const eDate = document.getElementById("exp-month");
+const eYear = document.getElementById("exp-year");
 
 // Form element
 const form = document.querySelector("form");
@@ -97,14 +99,14 @@ form.addEventListener('submit', function(e){
   validateName(nameInput.value,e);
   validateEmail(emailInput.value,e);
   validateActivities(e);
-  validateCreditCard(e);
+  if(paymentMethod.value === "credit-card") {
+    validateCreditCardDetails(e);
+  }  
 });
-
 
 /////////////////////////////////////////////
 // SUPPORT FUNCTIONS
 /////////////////////////////////////////////
-
 
 /**
  * Changes view of Payment Info area according to the selected METHOD.
@@ -158,17 +160,74 @@ function validateActivities(e) {
   }
 }
 
-function validateCreditCard(e) {
-  
+/**
+ * 
+ * @param {event} e 
+ */
+function validateCreditCardDetails(e) {
+  const eDateValue = parseInt(eDate.value);
+  const eYearValue = parseInt(eYear.value);
+  const cardNumberValue = parseInt(cardNumber.value);
+  const zipCodeValue = parseInt(zipCode.value);
+  const cvvValue = parseInt(cvv.value);
+
+  expirationDateAfterPresent(eDateValue,eYearValue,e);
+  validateCardNumber(cardNumberValue,e)
+  validateZipCode(zipCodeValue,e);
+  validateCvv(cvvValue,e)
+}
+
+/**
+ * 
+ * @param {number} eDateValue 
+ * @param {number} eYearValue 
+ * @param {event} e 
+ */
+function expirationDateAfterPresent(eDateValue,eYearValue,e) {
+  const presentDate = new Date();
+  if(eYearValue === presentDate.getFullYear() &&
+     eDateValue <= presentDate.getMonth() + 1) {
+    e.preventDefault;
+  }
+}
+
+/**
+ * 
+ * @param {*} cardNumberValue 
+ * @param {*} e 
+ */
+function validateCardNumber(cardNumberValue,e) {
+  const valid = /^\d{13,15}$/.test(cardNumberValue);
+  if (!valid) {
+    e.preventDefault;
+  }
+}
+
+/**
+ * 
+ * @param {*} zipCodeValue 
+ * @param {*} e 
+ */
+function validateZipCode(zipCodeValue,e) {
+  const valid = /^\d{5}$/.test(zipCodeValue);
+  if (!valid) {
+    e.preventDefault;
+  }
+}
+
+/**
+ * 
+ * @param {*} cvvValue 
+ * @param {*} e 
+ */
+function validateCvv(cvvValue,e) {
+  const valid = /^\d{3}$/.test(cvvValue);
+  if (!valid) {
+    e.preventDefault;
+  }
 }
 
 // TESTER LISTENER
-// emailInput.addEventListener('keyup', function(e){
-//   const valid = validateEmail(e.target.value,e);
-//   console.log(e.target.value);
-//   if (valid) {
-//     console.log("valid");
-//   } else {
-//     console.log("not valid");
-//   }
-// })
+cvv.addEventListener('keyup', function(e){
+  validateCvv(cvv.value,e);
+});
