@@ -239,7 +239,6 @@ function validateCreditCardDetails(e) {
   const zipCodeValue = parseInt(zipCode.value);
   const cvvValue = parseInt(cvv.value);
 
-  expirationDateAfterPresent(e);
   validateCardNumber(cardNumberValue,e);
   validateZipCode(zipCodeValue,e);
   validateCvv(cvvValue,e);  
@@ -254,15 +253,20 @@ function validateCreditCardDetails(e) {
  */
 function expirationDateAfterPresent(e) {
   const presentDate = new Date();
+  const spanHint = `<span class="hint">Credit Card must not expire before 
+                    ${presentDate.getMonth() + 2}/${presentDate.getFullYear()}</span>`;
+  document.querySelector(".expiration-box").insertAdjacentHTML('beforeend',spanHint);
+  document.querySelector(".expiration-box span").style.display = "none";
   if (parseInt(eYear.value) === presentDate.getFullYear() &&
       parseInt(eDate.value) <= presentDate.getMonth() + 1) {
     notValid(eDate);
-    notValid(eYear); 
+    notValid(eYear);
+    document.querySelector(".expiration-box span").style.display = "block";
     e.preventDefault();
   } else if (eDate.value === "Select Date" &&
              eYear.value === "Select Year") {
     notValid(eDate);
-    notValid(eYear);
+    notValid(eYear);    
     e.preventDefault();
   } else if (eDate.value === "Select Date") {
     notValid(eDate);
@@ -284,9 +288,16 @@ function expirationDateAfterPresent(e) {
  * @param {event} e 
  */
 function validateCardNumber(cardNumberValue,e) {
+  const onlyDigits = /\D+/g.test(cardNumberValue);
   const valid = /^\d{13,16}$/.test(cardNumberValue);
-  if (!valid) {
+  const ccHint = document.getElementById("cc-hint");
+  if (onlyDigits) {
     notValid(cardNumber);
+    ccHint.innerHTML = "Use only digits(0-9)";
+    e.preventDefault();
+  } else if (!valid) {
+    notValid(cardNumber);
+    ccHint.innerHTML = "Credit card number must be between 13 - 16 digits";
     e.preventDefault();
   } else {
     isValid(cardNumber);
@@ -299,9 +310,16 @@ function validateCardNumber(cardNumberValue,e) {
  * @param {event} e 
  */
 function validateZipCode(zipCodeValue,e) {
+  const onlyDigits = /\D+/g.test(zipCodeValue);
   const valid = /^\d{5}$/.test(zipCodeValue);
-  if (!valid) {
+  const zipHint = document.getElementById("zip-hint");
+  if (onlyDigits) {
     notValid(zipCode);
+    zipHint.innerHTML = "Use only digits(0-9)";
+    e.preventDefault();
+  } else if (!valid) {
+    notValid(zipCode);
+    zipHint.innerHTML = "Zip Code must be 5 digits";
     e.preventDefault();
   } else {
     isValid(zipCode);
@@ -314,9 +332,16 @@ function validateZipCode(zipCodeValue,e) {
  * @param {event} e 
  */
 function validateCvv(cvvValue,e) {
+  const onlyDigits = /\D+/g.test(cvvValue);
   const valid = /^\d{3}$/.test(cvvValue);
-  if (!valid) {
+  const cvvHint = document.getElementById("cvv-hint");
+  if (onlyDigits) {
     notValid(cvv);
+    cvvHint.innerHTML = "Use only digits(0-9)";
+    e.preventDefault();
+  } else if (!valid) {
+    notValid(cvv);
+    cvvHint.innerHTML = "CVV must be 3 digits";
     e.preventDefault();
   } else {
     isValid(cvv);
